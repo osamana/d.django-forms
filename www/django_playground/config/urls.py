@@ -17,6 +17,7 @@ urlpatterns = [
 
     # User management
     url(r'^users/', include('django_playground.users.urls', namespace='users')),
+    url(r'^forms/', include('django_playground.myforms.urls', namespace='myforms')),
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
