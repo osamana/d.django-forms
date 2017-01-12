@@ -2,9 +2,34 @@
 
 {% block content %}
 {{ block.super }}
+    <h3>Name Form</h3>
+    <form action="{% url "myforms:name-form" %}" method="post">
+
+
+    {% csrf_token %}
+{% for field in name_form %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+    </div>
+{% endfor %}
+    <input type="submit" value="Submit" />
+</form>
+    <h3>Address Form</h3>
     <form action="{% url "myforms:name-form" %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+{% for field in address_form %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+    </div>
+{% endfor %}
     <input type="submit" value="Submit" />
 </form>
 {% endblock %}

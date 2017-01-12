@@ -3,35 +3,40 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.core.mail import send_mail
 
-from .forms import NameForm
+from .forms import NameForm, AddressForm
 
 
 def get_name(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = NameForm(request.POST)
+        name_form = NameForm(request.POST)
+        address_form = AddressForm(request.POST)
+
+        context={}
         # check whether it's valid:
-        if form.is_valid():
+        if name_form.is_valid():
             # process the data in form.cleaned_data as required
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            sender = form.cleaned_data['sender']
-            cc_myself = form.cleaned_data['cc_myself']
+            first_name = name_form.cleaned_data['first_name']
+            last_name = name_form.cleaned_data['last_name']
 
-            recipients = ['info@example.com']
-            if cc_myself:
-                recipients.append(sender)
+            context["first_name"] = name_form.cleaned_data["first_name"]
+            context["last_name"] = name_form.cleaned_data["last_name"]
 
-            send_mail(subject, message, sender, recipients)
-            return HttpResponseRedirect(reverse('myforms:thanks'))
-            # redirect to a new URL:
+        if address_form.is_valid():
+            # process the data in form.cleaned_data as required
+            address = address_form.cleaned_data['address']
+
+            context["address"] = address_form.cleaned_data["address"]
+
+        return HttpResponseRedirect(reverse('myforms:thanks'))
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = NameForm()
+        name_form = NameForm()
+        address_form = AddressForm()
 
-    return render(request, 'name.html', {'form': form})
+    return render(request, 'name.html', {'name_form': name_form, 'address_form':address_form})
 
 
 def thanks(request):
